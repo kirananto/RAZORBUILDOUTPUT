@@ -1,4 +1,10 @@
 # Zipped Files
-
 *.zip
-
+Image
+zImage
+# Modules
+*.ko
+#Image Files
+*.img
+# Backup Files
+*.*~
