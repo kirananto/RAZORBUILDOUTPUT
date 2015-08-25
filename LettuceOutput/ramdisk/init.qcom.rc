@@ -27,6 +27,7 @@
 
 import init.qcom.usb.rc
 import init.target.rc
+import init.lettuce.diag.rc
 
 on early-init
     mount debugfs debugfs /sys/kernel/debug
@@ -180,6 +181,9 @@ on post-fs-data
     #Create a folder for SRS to be able to create a usercfg file
     mkdir /data/data/media 0770 media media
 
+    mkdir /data/diag_logs 0777 system system 5
+    chmod 666 /dev/diag
+
 on early-boot
     # set RLIMIT_MEMLOCK to 64MB
     setrlimit 8 67108864 67108864
@@ -306,80 +310,36 @@ on boot
     # Allow access for CCID command/response timeout configuration
     chown system system /sys/module/ccid_bridge/parameters/bulk_msg_timeout
 
-    # Torch
-    chown system camera /sys/class/leds/torch-light/brightness
-    chmod 0660 /sys/class/leds/torch-light/brightness
-
     # Touchscreen
-    chown root system /sys/devices/virtual/touchscreen/touchscreen_dev/gesture_ctrl
-    chmod 0660 /sys/devices/virtual/touchscreen/touchscreen_dev/gesture_ctrl
-
-    # charger
-    chown system system /sys/bus/i2c/drivers/lc709203/batt_capacity
-    chmod 0660 /sys/bus/i2c/drivers/lc709203/batt_capacity
-
-    chown root system /sys/devices/soc.0/78b9000.i2c/i2c-5/5-005d/keypad_enable
-    chmod 0660 /sys/devices/soc.0/78b9000.i2c/i2c-5/5-005d/keypad_enable
+    chown radio system /sys/devices/soc.0/78b9000.i2c/i2c-5/5-0040/gesture
+    chmod 0660 /sys/devices/soc.0/78b9000.i2c/i2c-5/5-0040/gesture
 
     # camera sockets
     mkdir /data/misc/camera 0770 camera camera
 
-    # color
-    chown system system /sys/devices/virtual/graphics/fb0/rgb
-    chmod 0660 /sys/devices/virtual/graphics/fb0/rgb
-
 on property:service.bootanim.exit=1
-    write /sys/module/lpm_levels/system/performance/cpu0/wfi/idle_enabled Y
-    write /sys/module/lpm_levels/system/performance/cpu1/wfi/idle_enabled Y
-    write /sys/module/lpm_levels/system/performance/cpu2/wfi/idle_enabled Y
-    write /sys/module/lpm_levels/system/performance/cpu3/wfi/idle_enabled Y
-    write /sys/module/lpm_levels/system/power/cpu4/wfi/idle_enabled Y
-    write /sys/module/lpm_levels/system/power/cpu5/wfi/idle_enabled Y
-    write /sys/module/lpm_levels/system/power/cpu6/wfi/idle_enabled Y
-    write /sys/module/lpm_levels/system/power/cpu7/wfi/idle_enabled Y
-    write /sys/module/lpm_levels/system/performance/cpu0/standalone_pc/idle_enabled Y
-    write /sys/module/lpm_levels/system/performance/cpu1/standalone_pc/idle_enabled Y
-    write /sys/module/lpm_levels/system/performance/cpu2/standalone_pc/idle_enabled Y
-    write /sys/module/lpm_levels/system/performance/cpu3/standalone_pc/idle_enabled Y
-    write /sys/module/lpm_levels/system/power/cpu4/standalone_pc/idle_enabled Y
-    write /sys/module/lpm_levels/system/power/cpu5/standalone_pc/idle_enabled Y
-    write /sys/module/lpm_levels/system/power/cpu6/standalone_pc/idle_enabled Y
-    write /sys/module/lpm_levels/system/power/cpu7/standalone_pc/idle_enabled Y
-    write /sys/module/lpm_levels/system/performance/cpu0/pc/idle_enabled Y
-    write /sys/module/lpm_levels/system/performance/cpu1/pc/idle_enabled Y
-    write /sys/module/lpm_levels/system/performance/cpu2/pc/idle_enabled Y
-    write /sys/module/lpm_levels/system/performance/cpu3/pc/idle_enabled Y
-    write /sys/module/lpm_levels/system/power/cpu4/pc/idle_enabled Y
-    write /sys/module/lpm_levels/system/power/cpu5/pc/idle_enabled Y
-    write /sys/module/lpm_levels/system/power/cpu6/pc/idle_enabled Y
-    write /sys/module/lpm_levels/system/power/cpu7/pc/idle_enabled Y
-    write /sys/module/lpm_levels/system/performance/cpu0/pc/suspend_enabled Y
-    write /sys/module/lpm_levels/system/performance/cpu1/pc/suspend_enabled Y
-    write /sys/module/lpm_levels/system/performance/cpu2/pc/suspend_enabled Y
-    write /sys/module/lpm_levels/system/performance/cpu3/pc/suspend_enabled Y
-    write /sys/module/lpm_levels/system/power/cpu4/pc/suspend_enabled Y
-    write /sys/module/lpm_levels/system/power/cpu5/pc/suspend_enabled Y
-    write /sys/module/lpm_levels/system/power/cpu6/pc/suspend_enabled Y
-    write /sys/module/lpm_levels/system/power/cpu7/pc/suspend_enabled Y
-    write /sys/module/lpm_levels/system/power/power-l2-pc/idle_enabled Y
-    write /sys/module/lpm_levels/system/power/power-l2-active/idle_enabled Y
-    write /sys/module/lpm_levels/system/power/power-l2-pc/idle_enabled Y
-    write /sys/module/lpm_levels/system/performance/performance-l2-active/idle_enabled Y
-    write /sys/module/lpm_levels/system/performance/performance-l2-pc/idle_enabled Y
-    write /sys/module/lpm_levels/system/power/power-l2-pc/suspend_enabled Y
-    write /sys/module/lpm_levels/system/performance/performance-l2-pc/suspend_enabled Y
-    write /sys/module/lpm_levels/system/system-cci-active/idle_enabled Y
-    write /sys/module/lpm_levels/system/system-cci-retention/idle_enabled Y
-    write /sys/module/lpm_levels/system/system-cci-pc/idle_enabled Y
-    write /sys/module/lpm_levels/system/system-cci-pc/suspend_enabled Y
+    write /sys/module/lpm_levels/system/cpu0/wfi/idle_enabled Y
+    write /sys/module/lpm_levels/system/cpu1/wfi/idle_enabled Y
+    write /sys/module/lpm_levels/system/cpu2/wfi/idle_enabled Y
+    write /sys/module/lpm_levels/system/cpu3/wfi/idle_enabled Y
+    write /sys/module/lpm_levels/system/cpu0/standalone_pc/idle_enabled Y
+    write /sys/module/lpm_levels/system/cpu1/standalone_pc/idle_enabled Y
+    write /sys/module/lpm_levels/system/cpu2/standalone_pc/idle_enabled Y
+    write /sys/module/lpm_levels/system/cpu3/standalone_pc/idle_enabled Y
+    write /sys/module/lpm_levels/system/cpu0/pc/idle_enabled Y
+    write /sys/module/lpm_levels/system/cpu1/pc/idle_enabled Y
+    write /sys/module/lpm_levels/system/cpu2/pc/idle_enabled Y
+    write /sys/module/lpm_levels/system/cpu3/pc/idle_enabled Y
+    write /sys/module/lpm_levels/system/cpu0/pc/suspend_enabled Y
+    write /sys/module/lpm_levels/system/cpu1/pc/suspend_enabled Y
+    write /sys/module/lpm_levels/system/cpu2/pc/suspend_enabled Y
+    write /sys/module/lpm_levels/system/cpu3/pc/suspend_enabled Y
+    write /sys/module/lpm_levels/system/l2-pc/idle_enabled Y
+    write /sys/module/lpm_levels/system/l2-cache-active/idle_enabled Y
+    write /sys/module/lpm_levels/system/l2-pc/suspend_enabled Y
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ondemand
 
     write /sys/module/lpm_levels/parameters/sleep_disabled 0
-    write /sys/class/net/rmnet0/queues/rx-0/rps_cpus 10
-
-    write /sys/class/devfreq/qcom,cpubw.61/governor "bw_hwmon"
-    write /sys/class/devfreq/qcom,cpubw.61/bw_hwmon/io_percent 20
-    write /sys/class/devfreq/qcom,gpubw.38/governor "bw_hwmon"
-    write /sys/class/devfreq/qcom,gpubw.38/bw_hwmon/io_percent 40
 
 on property:init.svc.bootanim=stopped
     # Apply HMP task packing
@@ -387,49 +347,29 @@ on property:init.svc.bootanim=stopped
     write /proc/sys/kernel/sched_mostly_idle_load 30
     write /proc/sys/kernel/sched_mostly_idle_nr_run 3
 
+    # enable governor
     write /sys/module/msm_thermal/core_control/enabled 0
-
-    # enable governor for perf cluster
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "interactive"
-    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay "30000 800000:50000 1113600:80000"
-    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load 90
-    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_rate 30000
-    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq 800000
-    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/io_is_busy 0
-    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads "50 800000:85 1113600:90 1344000:80"
-    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/min_sample_time 50000
-    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/max_freq_hysteresis 50000
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 200000
-    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/use_sched_load 1
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1344000
-    
-
-    # enable governor for power cluster
-    write /sys/devices/system/cpu/cpu4/online 1
-    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor "interactive"
-    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay "35000 800000:50000"
-    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load 95
-    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/timer_rate 50000
-    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq 800000
-    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/io_is_busy 0
-    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads "30 499200:50 800000:95"
-    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/min_sample_time 40000
-    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/max_freq_hysteresis 40000
-    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/use_sched_load 1
-    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq 200000
-
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1192000
+    write /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay "20000 998400:50000"
+    write /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load 85
+    write /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq 998400
+    write /sys/devices/system/cpu/cpufreq/interactive/io_is_busy 0
+    write /sys/devices/system/cpu/cpufreq/interactive/min_sample_time 50000
+    write /sys/devices/system/cpu/cpufreq/interactive/max_freq_hysteresis 50000
+    write /sys/devices/system/cpu/cpufreq/interactive/target_loads "20 998400:85 1190400:90 1248000:80"
+    write /sys/devices/system/cpu/cpufreq/interactive/timer_rate 20000
     write /sys/module/msm_thermal/core_control/enabled 1
 
+
     # KCAL CONTROL
-    write /sys/devices/platform/kcal_ctrl.0/kcal_sat 260
+    write /sys/devices/platform/kcal_ctrl.0/kcal_sat 278
 
     #Virtual Memory    
     write /sys/block/zram0/disksize 618659840
     write /proc/sys/vm/vfs_cache_pressure 20
-    
-    #Charging
-    write /sys/kernel/thundercharge_control/enabled 1
-  
+
     #Ioschedulers
     write /sys/block/mmcblk0/queue/scheduler "bfq"
     write /sys/block/mmcblk0/queue/read_ahead_kb 1536
@@ -443,31 +383,17 @@ on property:init.svc.bootanim=stopped
     write /sys/kernel/alucard_hotplug/maxcoreslimit_sleep 1
     write /sys/kernel/alucard_hotplug/hp_io_is_busy 1
 
-
     # bring all CPUs online
     write /sys/devices/system/cpu/cpu1/online 1
     write /sys/devices/system/cpu/cpu2/online 1
     write /sys/devices/system/cpu/cpu3/online 1
-    write /sys/devices/system/cpu/cpu5/online 1
-    write /sys/devices/system/cpu/cpu6/online 1
-    write /sys/devices/system/cpu/cpu7/online 1
 
     write /proc/sys/kernel/sched_window_stats_policy 2
-    write /proc/sys/kernel/sched_upmigrate 75
-    write /proc/sys/kernel/sched_downmigrate 60
     write /proc/sys/kernel/sched_ravg_hist_size 5
 
     write /sys/module/cpu_boost/parameters/boost_ms 20
+    write /sys/module/cpu_boost/parameters/input_boost_freq "0:998400 1:998400 2:800000 3:800000"
     write /sys/module/cpu_boost/parameters/sched_boost_on_input 1
-
-    write /sys/devices/system/cpu/cpu0/sched_mostly_idle_load 30
-    write /sys/devices/system/cpu/cpu1/sched_mostly_idle_load 30
-    write /sys/devices/system/cpu/cpu2/sched_mostly_idle_load 30
-    write /sys/devices/system/cpu/cpu3/sched_mostly_idle_load 30
-    write /sys/devices/system/cpu/cpu4/sched_mostly_idle_load 30
-    write /sys/devices/system/cpu/cpu5/sched_mostly_idle_load 30
-    write /sys/devices/system/cpu/cpu6/sched_mostly_idle_load 30
-    write /sys/devices/system/cpu/cpu7/sched_mostly_idle_load 30
 
     write /sys/block/mmcblk0/queue/scheduler row
     start perfd
@@ -485,11 +411,7 @@ on property:vold.decrypt=trigger_restart_framework
 on property:persist.env.fastdorm.enabled=true
     setprop persist.radio.data_no_toggle 1
 
-# Turn on adb for factory test mode
-on property:ro.boot.ftm=1
-    trigger property:sys.usb.config=mtp,adb
-
-service irsc_util /system/bin/irsc_util "/etc/sec_config"
+service irsc_util /system/bin/logwrapper /system/bin/irsc_util "/etc/sec_config"
     class main
     user root
     oneshot
@@ -635,16 +557,6 @@ service dhcpcd_bnep4 /system/bin/dhcpcd -BKLG
     disabled
     oneshot
 
-service dhcpcd_eth0 /system/bin/dhcpcd -aABDKL
-    class late_start
-    disabled
-    oneshot
-
-service iprenew_eth0 /system/bin/dhcpcd -n
-    class late_start
-    disabled
-    oneshot
-
 service loc_launcher /system/bin/loc_launcher
     #loc_launcher will start as root and set its uid to gps
     class late_start
@@ -712,14 +624,9 @@ on property:persist.usb.hvdcp.detect=true
 on property:persist.usb.hvdcp.detect=false
     stop hvdcp
 
-service vm_bms /system/bin/vm_bms
-    user root
-    group root
-    disabled
-
 #start camera server as daemon
 service qcamerasvr /system/bin/mm-qcamera-daemon
-    class main
+    class late_start
     user camera
     group camera system inet input graphics
 
@@ -741,6 +648,11 @@ service perfd /system/bin/perfd
    group root
    disabled
 
+service thermal-engine /system/bin/thermal-engine
+   class main
+   user root
+   group root
+
 service time_daemon /system/bin/time_daemon
    class late_start
    user root
@@ -752,55 +664,26 @@ service audiod /system/bin/audiod
    group system
 
 on charger
-   chown root system /sys/class/power_supply/bms/current_now
-   chown root system /sys/class/power_supply/bms/voltage_ocv
-   chmod 0664 /sys/class/power_supply/bms/current_now
-   chmod 0664 /sys/class/power_supply/bms/voltage_ocv
-   write /sys/module/lpm_levels/system/performance/cpu0/wfi/idle_enabled Y
-   write /sys/module/lpm_levels/system/performance/cpu1/wfi/idle_enabled Y
-   write /sys/module/lpm_levels/system/performance/cpu2/wfi/idle_enabled Y
-   write /sys/module/lpm_levels/system/performance/cpu3/wfi/idle_enabled Y
-   write /sys/module/lpm_levels/system/power/cpu4/wfi/idle_enabled Y
-   write /sys/module/lpm_levels/system/power/cpu5/wfi/idle_enabled Y
-   write /sys/module/lpm_levels/system/power/cpu6/wfi/idle_enabled Y
-   write /sys/module/lpm_levels/system/power/cpu7/wfi/idle_enabled Y
-   write /sys/module/lpm_levels/system/performance/cpu0/standalone_pc/idle_enabled Y
-   write /sys/module/lpm_levels/system/performance/cpu1/standalone_pc/idle_enabled Y
-   write /sys/module/lpm_levels/system/performance/cpu2/standalone_pc/idle_enabled Y
-   write /sys/module/lpm_levels/system/performance/cpu3/standalone_pc/idle_enabled Y
-   write /sys/module/lpm_levels/system/power/cpu4/standalone_pc/idle_enabled Y
-   write /sys/module/lpm_levels/system/power/cpu5/standalone_pc/idle_enabled Y
-   write /sys/module/lpm_levels/system/power/cpu6/standalone_pc/idle_enabled Y
-   write /sys/module/lpm_levels/system/power/cpu7/standalone_pc/idle_enabled Y
-   write /sys/module/lpm_levels/system/performance/cpu0/pc/idle_enabled Y
-   write /sys/module/lpm_levels/system/performance/cpu1/pc/idle_enabled Y
-   write /sys/module/lpm_levels/system/performance/cpu2/pc/idle_enabled Y
-   write /sys/module/lpm_levels/system/performance/cpu3/pc/idle_enabled Y
-   write /sys/module/lpm_levels/system/power/cpu4/pc/idle_enabled Y
-   write /sys/module/lpm_levels/system/power/cpu5/pc/idle_enabled Y
-   write /sys/module/lpm_levels/system/power/cpu6/pc/idle_enabled Y
-   write /sys/module/lpm_levels/system/power/cpu7/pc/idle_enabled Y
-   write /sys/module/lpm_levels/system/performance/cpu0/pc/suspend_enabled N
-   write /sys/module/lpm_levels/system/performance/cpu1/pc/suspend_enabled Y
-   write /sys/module/lpm_levels/system/performance/cpu2/pc/suspend_enabled Y
-   write /sys/module/lpm_levels/system/performance/cpu3/pc/suspend_enabled Y
-   write /sys/module/lpm_levels/system/power/cpu4/pc/suspend_enabled Y
-   write /sys/module/lpm_levels/system/power/cpu5/pc/suspend_enabled Y
-   write /sys/module/lpm_levels/system/power/cpu6/pc/suspend_enabled Y
-   write /sys/module/lpm_levels/system/power/cpu7/pc/suspend_enabled Y
-   write /sys/module/lpm_levels/system/power/power-l2-pc/idle_enabled Y
-   write /sys/module/lpm_levels/system/power/power-l2-active/idle_enabled Y
-   write /sys/module/lpm_levels/system/power/power-l2-pc/idle_enabled Y
-   write /sys/module/lpm_levels/system/performance/performance-l2-active/idle_enabled Y
-   write /sys/module/lpm_levels/system/performance/performance-l2-pc/idle_enabled Y
-   write /sys/module/lpm_levels/system/power/power-l2-pc/suspend_enabled Y
-   write /sys/module/lpm_levels/system/performance/performance-l2-pc/suspend_enabled Y
-   write /sys/module/lpm_levels/system/system-cci-active/idle_enabled Y
-   write /sys/module/lpm_levels/system/system-cci-retention/idle_enabled Y
-   write /sys/module/lpm_levels/system/system-cci-pc/idle_enabled Y
-   write /sys/module/lpm_levels/system/system-cci-pc/suspend_enabled Y
+   write /sys/module/lpm_levels/system/cpu0/wfi/idle_enabled Y
+   write /sys/module/lpm_levels/system/cpu1/wfi/idle_enabled Y
+   write /sys/module/lpm_levels/system/cpu2/wfi/idle_enabled Y
+   write /sys/module/lpm_levels/system/cpu3/wfi/idle_enabled Y
+   write /sys/module/lpm_levels/system/cpu0/standalone_pc/idle_enabled Y
+   write /sys/module/lpm_levels/system/cpu1/standalone_pc/idle_enabled Y
+   write /sys/module/lpm_levels/system/cpu2/standalone_pc/idle_enabled Y
+   write /sys/module/lpm_levels/system/cpu3/standalone_pc/idle_enabled Y
+   write /sys/module/lpm_levels/system/cpu0/pc/idle_enabled Y
+   write /sys/module/lpm_levels/system/cpu1/pc/idle_enabled Y
+   write /sys/module/lpm_levels/system/cpu2/pc/idle_enabled Y
+   write /sys/module/lpm_levels/system/cpu3/pc/idle_enabled Y
+   write /sys/module/lpm_levels/system/cpu0/pc/suspend_enabled N
+   write /sys/module/lpm_levels/system/cpu1/pc/suspend_enabled Y
+   write /sys/module/lpm_levels/system/cpu2/pc/suspend_enabled Y
+   write /sys/module/lpm_levels/system/cpu3/pc/suspend_enabled Y
+   write /sys/module/lpm_levels/system/l2-pc/idle_enabled Y
+   write /sys/module/lpm_levels/system/l2-cache-active/idle_enabled Y
+   write /sys/module/lpm_levels/system/l2-pc/suspend_enabled Y
    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ondemand
-   start vm_bms
 
 service ppd /system/bin/mm-pp-daemon
     class late_start
@@ -820,13 +703,17 @@ service wcnss-service /system/bin/wcnss_service
     user system
     group system wifi radio
 
-service msm_irqbalance /system/bin/msm_irqbalance -p 0,0,0,0,1,1,1,1
-    class core
-    user root
-    group root
-
 service setup_fs /system/bin/setup_fs /dev/block/platform/7824900.sdhci/by-name/userdata
     class core
     user root
     group root
     oneshot
+
+# bugreport is triggered by holding down volume down, volume up and power
+service bugreport /system/bin/dumpstate -d -p -B \
+        -o /data/data/com.android.shell/files/bugreports/bugreport
+    class main
+    disabled
+    oneshot
+    keycodes 114 115 116
+

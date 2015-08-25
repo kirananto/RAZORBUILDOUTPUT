@@ -90,25 +90,11 @@ if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.modules)" == 1 ]; then
   rm -rf /system/vendor/lib64/hw/power.msm8916.so;
   cp -f /tmp/anykernel/modules/* /system/lib/modules/;
   set_perm_recursive 0 0 0755 0644 /system/lib/modules;
-fi;
-
 if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.cleanup)" == 1 ]; then
   rm -rf /tmp/anykernel;
 fi;
-ui_print "|-------------------------------|";
-ui_print "|                               |";
-ui_print "|     Updating Thermal Config     |";
-ui_print "|         by Kiran Anto         |";
-ui_print "|-------------------------------|";
+fi;
 umount /system;
-ui_print "|-------------------------------|";
-ui_print "|                               |";
-ui_print "|     Please Like In Thread     |";
-ui_print "|         Thanks to Vishal Raj  |";
-ui_print "|-------------------------------|";
-cp -f /tmp/anykernel/etc/thermal-engine.conf /etc/
-set_perm_recursive 0 0 0755 0644 /etc/thermal-engine.conf;
-umount /etc;
 ui_print "|-------------------------------|";
 ui_print "|                               |";
 ui_print "|          Enjoy RaZor          |";

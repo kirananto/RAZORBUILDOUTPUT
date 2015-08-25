@@ -30,14 +30,13 @@ ui_print " ";
 mkdir -p /tmp/anykernel;
 cd /tmp/anykernel;
 unzip -o $ZIP;
+
 ui_print " ";
-ui_print "|----------------------------|";
-ui_print "|                            |";
-ui_print "|Preparing Your Device !!!!  |";
-ui_print "|                            |";
-ui_print "|----------------------------|";
+ui_print " Xcelerate Custom Kernel";
+ui_print " ";
+ui_print "by kairi_zeroblade";
+ui_print " ";
 /sbin/busybox mount /system;
-/sbin/busybox mount /etc;
 
 if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.devicecheck)" == 1 ]; then
   ui_print "Checking device...";
@@ -55,11 +54,6 @@ fi;
 
 if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.initd)" == 1 ]; then
   ui_print "Creating init.d...";
-  ui_print "|-------------------------|";
-ui_print "|                         |";
-ui_print "|  RaZOrReborn by Kiran   |";
-ui_print "|                         |";
-ui_print "|-------------------------|";
   mkdir /system/etc/init.d;
   set_perm_recursive 0 0 0755 0755 /system/etc/init.d;
 fi;
@@ -70,11 +64,6 @@ if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.system)" == 1 ]; then
 fi;
 
 ui_print "Installing kernel...";
-ui_print "|-------------------------|";
-ui_print "|                         |";
-ui_print "|  Flashing RaZOrReborn   |";
-ui_print "|                         |";
-ui_print "|-------------------------|";
 /sbin/sh /tmp/anykernel/anykernel.sh;
 if [ "$(cat /tmp/anykernel/exitcode)" == 1 ]; then 
   umount /system;
@@ -86,8 +75,6 @@ if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.modules)" == 1 ]; then
   ui_print " ";
   rm -rf /system/lib/modules;
   mkdir /system/lib/modules;
-  rm -rf /system/vendor/lib/hw/power.msm8916.so;
-  rm -rf /system/vendor/lib64/hw/power.msm8916.so;
   cp -f /tmp/anykernel/modules/* /system/lib/modules/;
   set_perm_recursive 0 0 0755 0644 /system/lib/modules;
 fi;
@@ -95,23 +82,11 @@ fi;
 if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.cleanup)" == 1 ]; then
   rm -rf /tmp/anykernel;
 fi;
-ui_print "|-------------------------------|";
-ui_print "|                               |";
-ui_print "|     Updating Thermal Config     |";
-ui_print "|         by Kiran Anto         |";
-ui_print "|-------------------------------|";
+
 umount /system;
-ui_print "|-------------------------------|";
-ui_print "|                               |";
-ui_print "|     Please Like In Thread     |";
-ui_print "|         Thanks to Vishal Raj  |";
-ui_print "|-------------------------------|";
-cp -f /tmp/anykernel/etc/thermal-engine.conf /etc/
-set_perm_recursive 0 0 0755 0644 /etc/thermal-engine.conf;
-umount /etc;
-ui_print "|-------------------------------|";
-ui_print "|                               |";
-ui_print "|          Enjoy RaZor          |";
-ui_print "|                               |";
-ui_print "|-------------------------------|";
+ui_print " ";
+ui_print "Done!! Start rocking this Phone by rebooting!!";
+ui_print " ";
+ui_print "AnyKernel2 by osm0sis@xda";
+ui_print " ";
 
