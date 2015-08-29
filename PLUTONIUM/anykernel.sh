@@ -3,21 +3,21 @@
 
 ## AnyKernel setup
 # EDIFY properties
-do.devicecheck=1
-do.system=0
+do.devicecheck=0
 do.initd=0
 do.modules=1
-do.cleanup=1
-device.name1=plutonium
-device.name2=a2003
-device.name3=OnePlus2
-device.name4=
+do.cleanup=0
+device.name1=A2001
+device.name2=A2005
+device.name3=A2003
+device.name4=OnePlus2
 device.name5=
 
 # shell variables
-block=/dev/block/platform/7824900.sdhci/by-name/boot;
+block=/dev/block/platform/f9824900.sdhci/by-name/boot;
 
 ## end setup
+
 
 ## AnyKernel methods (DO NOT CHANGE)
 # set up extracted files and directories
@@ -67,7 +67,7 @@ write_boot() {
     kernel=$split_img/$kernel;
   fi;
   if [ -f /tmp/anykernel/dtb ]; then
-    dtb="--dt /tmp/anykernel/dt.img";
+    dtb="--dt /tmp/anykernel/dtb";
   elif [ -f *-dtb ]; then
     dtb=`ls *-dtb`;
     dtb="--dt $split_img/$dtb";
@@ -144,40 +144,15 @@ replace_file() {
 
 ## end methods
 
+
 ## AnyKernel permissions
 # set permissions for included files
 chmod -R 755 $ramdisk
-chmod 750 $ramdisk/sbin/custom.sh;
-chmod 750 $ramdisk/sbin/busybox;
+chmod 644 $ramdisk/sbin/media_profiles.xml
+
 
 ## AnyKernel install
 dump_boot;
-
-# begin ramdisk changes
-
-# insert initd scripts
-#cp -fp $patch/* /system/etc/
-#chmod 644 /system/etc/fstab.swap
-
-# adb secure
-replace_string default.prop "ro.adb.secure=0" "ro.adb.secure=1" "ro.adb.secure=0";
-replace_string default.prop "ro.secure=0" "ro.secure=1" "ro.secure=0";
-
-# Add custom loader script for Synapse
-found=$(find init.rc -type f | xargs grep -oh "service Post-init /sbin/custom.sh");
-if [ "$found" != 'service Post-init /sbin/custom.sh' ]; then
-	#append the new lines for this option at the bottom
-        echo "" >> init.rc
-	echo "# Call Post-init script" >> init.rc
-        echo "service Post-init /sbin/custom.sh" >> init.rc
-        echo "    class main" >> init.rc
-        echo "    user root" >> init.rc
-        echo "    oneshot" >> init.rc
-fi
-
-# end ramdisk changes
-
 write_boot;
-
 ## end install
 
