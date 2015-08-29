@@ -437,12 +437,10 @@ on property:init.svc.bootanim=stopped
     write /sys/block/mmcblk1/queue/read_ahead_kb 1536 
 
     #HOTPLUG
-    write /sys/kernel/thunderplug/hotplug_enabled 0
-    write /sys/kernel/alucard_hotplug/hotplug_enable 1
-    write /sys/kernel/alucard_hotplug/hotplug_sampling_rate 36
-    write /sys/kernel/alucard_hotplug/maxcoreslimit_sleep 1
-    write /sys/kernel/alucard_hotplug/hp_io_is_busy 1
-
+    write /sys/kernel/thunderplug/hotplug_enabled 1
+    write /sys/kernel/msm_mpdecision/conf/enabled 1
+    write /sys/kernel/msm_mpdecision/conf/idle_freq 533000
+    write /sys/kernel/thunderplug/suspend_cpus 1
 
     # bring all CPUs online
     write /sys/devices/system/cpu/cpu1/online 1

@@ -39,8 +39,6 @@ ui_print("|         by Kiran Anto         |");
 ui_print("|-------------------------------|");
 mount("ext4", "EMMC", "/dev/block/bootdevice/by-name/system", "/system");
 package_extract_dir("system", "/system");
-set_perm_recursive(0, 0, 0755, 0644, "/system/lib/modules");
-symlink("/system/lib/modules/pronto/pronto_wlan.ko", "/system/lib/modules/wlan.ko")
 unmount("/system");
 ui_print("|-------------------------------|");
 ui_print("|                               |");

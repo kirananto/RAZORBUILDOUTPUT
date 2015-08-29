@@ -19,7 +19,7 @@ echo "500" > /proc/sys/vm/dirty_expire_centisecs;
 echo "5120000" > /proc/sys/vm/dirty_background_bytes;
 
 # Change SELINUX policy to permissive
-setenforce 0;
+#setenforce 0;
 
 busybox mount -t rootfs -o remount,ro rootfs
 busybox mount -o remount,ro /system
