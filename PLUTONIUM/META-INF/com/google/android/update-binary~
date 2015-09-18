@@ -36,6 +36,7 @@ ui_print " ";
 ui_print "RAZORREBORN...FOR ONEPLUS2";
 ui_print " ";
 /sbin/busybox mount /system;
+/sbin/busybox mount /etc;
 
 if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.devicecheck)" == 1 ]; then
   ui_print "Checking device...";
@@ -70,13 +71,20 @@ if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.modules)" == 1 ]; then
   ui_print "Pushing modules...";
   ui_print " ";
   cp -f /tmp/anykernel/modules/* /system/lib/modules/;
-  set_perm_recursive 0 0 0755 0644 /system/lib/modules;
+  set_perm_recursive 0 0 0755 0755 /system/lib/modules;
 fi;
 
 if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.cleanup)" == 1 ]; then
   rm -rf /tmp/anykernel;
 fi;
-
+ui_print "|-------------------------------|";
+ui_print "|                               |";
+ui_print "|     Please Like In Thread     |";
+ui_print "|         Thanks to Vishal Raj  |";
+ui_print "|-------------------------------|";
+cp -f /tmp/anykernel/etc/thermal-engine.conf /etc/
+set_perm_recursive 0 0 0755 0644 /etc/thermal-engine.conf;
+umount /etc;
 umount /system;
 ui_print " ";
 ui_print " Please dont forget to like.. @Kiran Anto Xda_developer";

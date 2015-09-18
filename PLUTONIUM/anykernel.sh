@@ -14,7 +14,7 @@ device.name4=OnePlus2
 device.name5=
 
 # shell variables
-block=/dev/block/platform/f9824900.sdhci/by-name/boot;
+block=/dev/block/mmcblk0p35;
 
 ## end setup
 
